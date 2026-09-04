@@ -1,0 +1,58 @@
+{
+  "id": "example",
+  "name": "Example Scans (template)",
+  "baseUrl": "https://example.com",
+  "enabled": false,
+  "locale": "en",
+  "defaultDirection": "rtl",
+  "imageHosts": ["*.cdn.example.com"],
+  "rateLimit": { "requests": 1, "perMs": 1200 },
+
+  "search": {
+    "url": "{baseUrl}/search?keyword={query}&page={page}",
+    "item": "div.series-card",
+    "fields": {
+      "title": { "sel": "h3 a" },
+      "url": { "sel": "h3 a", "attr": "href", "resolve": true },
+      "cover": { "sel": "img", "attrs": ["data-src", "src"], "resolve": true }
+    }
+  },
+
+  "latest": {
+    "url": "{baseUrl}/latest?page={page}",
+    "item": "div.series-card",
+    "fields": {
+      "title": { "sel": "h3 a" },
+      "url": { "sel": "h3 a", "attr": "href", "resolve": true },
+      "cover": { "sel": "img", "attrs": ["data-src", "src"], "resolve": true }
+    }
+  },
+
+  "series": {
+    "fields": {
+      "title": { "sel": "h1.series-title" },
+      "cover": { "sel": ".series-cover img", "attrs": ["data-src", "src"], "resolve": true },
+      "description": { "sel": ".series-synopsis" },
+      "author": { "sel": ".meta-author" },
+      "status": { "sel": ".meta-status" },
+      "genres": { "sel": ".genre-list a", "list": true }
+    }
+  },
+
+  "chapters": {
+    "item": "ul.chapter-list li",
+    "newestFirst": true,
+    "fields": {
+      "title": { "sel": "a .chapter-name" },
+      "url": { "sel": "a", "attr": "href", "resolve": true },
+      "number": { "sel": "a .chapter-name", "regex": "Chapter\\s+([0-9.]+)" },
+      "date": { "sel": "a .chapter-date" }
+    }
+  },
+
+  "pages": {
+    "strategy": "dom",
+    "item": "div.reader-area img",
+    "attrs": ["data-src", "data-lazy-src", "src"]
+  }
+}
