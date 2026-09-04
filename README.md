@@ -36,6 +36,10 @@ template. You point it at whatever you read by writing a config — see
 
 ## Running it
 
+Needs **Node 22 or newer** (`node -v` to check). Nothing is compiled during
+install — `better-sqlite3` ships prebuilt N-API binaries — so no C++ build
+tools are required on any platform.
+
 ```bash
 npm install
 npm run dev      # server on :8080, Vite dev server on :5173
