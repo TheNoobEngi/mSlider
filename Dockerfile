@@ -1,4 +1,4 @@
-# Build stage — needs dev deps and a toolchain for better-sqlite3.
+# Build stage — dev deps and the client/server build. Nothing is compiled.
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
 COPY package*.json ./
