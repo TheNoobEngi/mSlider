@@ -1,0 +1,25 @@
+// Rename to example.ts and add to ./index.ts to activate.
+//
+// This shows the common case: the JSON config handles search, series details
+// and the chapter list fine, but the page images are built at runtime from a
+// base URL plus a filename list, which no CSS selector can express.
+
+import type { SourceOverride } from './types.js';
+
+export const exampleOverride: SourceOverride = {
+  id: 'example',
+
+  async pages(ctx, chapterUrl) {
+    const html = await ctx.get(chapterUrl);
+
+    const base = /const\s+CDN\s*=\s*"([^"]+)"/.exec(html)?.[1];
+    const names = /const\s+FILES\s*=\s*(\[[^\]]+\])/.exec(html)?.[1];
+    if (!base || !names) throw new Error(`Could not find the page list at ${chapterUrl}`);
+
+    return (JSON.parse(names) as string[]).map((name) => new URL(base + name, ctx.config.baseUrl).toString());
+  },
+
+  imageHeaders(ctx) {
+    return { referer: ctx.config.baseUrl + '/' };
+  },
+};

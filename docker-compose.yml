@@ -1,0 +1,18 @@
+services:
+  mslider:
+    build: .
+    ports:
+      - '8080:8080'
+    volumes:
+      # Your library, reading progress and page cache.
+      - mslider-data:/data
+      # Edit source configs without rebuilding the image.
+      - ./sources:/app/sources:ro
+    environment:
+      UPDATE_INTERVAL_MINUTES: '60'
+      # Uncomment to require a shared password on a public deployment.
+      # MSLIDER_TOKEN: 'change-me'
+    restart: unless-stopped
+
+volumes:
+  mslider-data:
