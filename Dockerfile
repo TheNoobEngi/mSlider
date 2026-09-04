@@ -2,7 +2,10 @@
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+# Skip npm's implicit "node-gyp rebuild" for better-sqlite3 (it has a binding.gyp
+# but no install script); its bundled N-API prebuild is what gets loaded anyway.
+# esbuild's postinstall is a real one, so restore just that.
+RUN npm ci --ignore-scripts && npm rebuild esbuild
 COPY tsconfig*.json vite.config.ts ./
 COPY src ./src
 COPY public ./public

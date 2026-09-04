@@ -36,14 +36,24 @@ template. You point it at whatever you read by writing a config — see
 
 ## Running it
 
-Needs **Node 22 or newer** (`node -v` to check). Nothing is compiled during
-install — `better-sqlite3` ships prebuilt N-API binaries — so no C++ build
-tools are required on any platform.
+Needs **Node 22 or newer** (`node -v` to check).
 
 ```bash
-npm install
+npm run setup    # use this instead of "npm install" — see below
 npm run dev      # server on :8080, Vite dev server on :5173
 ```
+
+`npm run setup` exists because of one npm behaviour: `better-sqlite3` ships a
+`binding.gyp` but no install script, and npm's default for that combination is
+to run `node-gyp rebuild` — which needs a C++ toolchain (on Windows, Visual
+Studio with the "Desktop development with C++" workload). The compile is
+pointless here: the package already bundles a prebuilt N-API binary for every
+platform, and that is what actually gets loaded at runtime.
+
+So setup installs with `--ignore-scripts` to skip that build, then rebuilds
+`esbuild` on its own, since esbuild's postinstall is a real one that Vite and
+tsx need. A plain `npm install` still works if you happen to have build tools
+installed — it just wastes a few minutes compiling SQLite for nothing.
 
 Open <http://localhost:5173>. For a real deployment:
 
