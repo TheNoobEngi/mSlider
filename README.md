@@ -54,6 +54,22 @@ Or with Docker:
 docker compose up -d --build
 ```
 
+### Try it without configuring a site
+
+```bash
+npm run demo
+```
+
+This starts a local stand-in manga site alongside the real server and points a
+source config at it — nothing leaves your machine. Open
+<http://localhost:5173>, then: **Browse → Demo Site → search "cartographer" →
+tap the result**. Open a chapter to test the tap zones, then go back to
+**Library → Check for updates**: the demo site publishes a held-back chapter on
+that first sweep, so it shows up in **Updates**.
+
+It's the fastest way to confirm the reader, library and update detection all
+behave before you write a config for a real source.
+
 Add it to your phone's home screen and it runs full-screen like an app.
 
 ### Configuration
@@ -155,9 +171,11 @@ test/                 runs against a fixture site — no network needed
 ## Tests
 
 ```bash
-npm test        # 38 tests: crawl, parse, store, proxy, update detection
+npm test        # 39 tests: crawl, parse, store, proxy, update detection
 npm run typecheck
 ```
+
+`npm run typecheck` covers the server, the client, and the test/demo helpers.
 
 The suite spins up a fixture HTTP server that behaves like a real site — lazy
 loaded covers, newest-chapter-first listings, page URLs hidden in an inline

@@ -195,10 +195,17 @@ describe('chapter pages', () => {
   it('serves page images through the proxy, satisfying hotlink protection', async () => {
     const response = await app.inject({ method: 'GET', url: pages.pages[0]! });
     assert.equal(response.statusCode, 200);
-    assert.match(response.headers['content-type'] as string, /^image\/gif/);
-    assert.ok(response.rawPayload.length > 0);
-    // GIF magic bytes — we streamed the real thing, not an error page.
-    assert.equal(response.rawPayload.subarray(0, 3).toString('ascii'), 'GIF');
+    assert.match(response.headers['content-type'] as string, /^image\/svg\+xml/);
+    // The bytes are the real image, and they are the page we asked for.
+    const body = response.rawPayload.toString('utf8');
+    assert.match(body, /^<svg/);
+    assert.match(body, /Chapter 1 · page 1/);
+  });
+
+  it('serves the correct image for a later page, not a cached first page', async () => {
+    const response = await app.inject({ method: 'GET', url: pages.pages[3]! });
+    assert.equal(response.statusCode, 200);
+    assert.match(response.rawPayload.toString('utf8'), /Chapter 1 · page 4/);
   });
 
   it('caches the page list instead of re-crawling on every open', async () => {
